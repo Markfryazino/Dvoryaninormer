@@ -1,0 +1,26 @@
+{
+    "os": "Linux-5.4.0-126-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2022-10-04T11:17:29.324336",
+    "startedAt": "2022-10-04T11:17:23.578543",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [
+        "--ip=127.0.0.1",
+        "--stdin=9008",
+        "--control=9006",
+        "--hb=9005",
+        "--Session.signature_scheme=\"hmac-sha256\"",
+        "--Session.key=b\"cc63de86-af5c-44a8-ac9b-c8a3c8590f6d\"",
+        "--shell=9007",
+        "--transport=\"tcp\"",
+        "--iopub=9009",
+        "--f=/home/data_sapiens/.local/share/jupyter/runtime/kernel-v2-10062XxZWtNutyvlB.json"
+    ],
+    "state": "running",
+    "program": "<python with no main file>",
+    "host": "HAL9000",
+    "username": "data_sapiens",
+    "executable": "/usr/bin/python3"
+}
