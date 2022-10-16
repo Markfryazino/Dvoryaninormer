@@ -60,7 +60,7 @@ class CoilDataset(torch.utils.data.Dataset):
                 paths[u][v] = features
 
         return {"node_features": node_features, "target": self.targets[idx], 
-                "node_centralities": node_centralities, "paths": paths, "path_lengths": path_lengths}
+                "node_centralities": node_centralities, "path_lengths": path_lengths}
 
 
 def collate_graphs(data):
@@ -83,4 +83,4 @@ def collate_graphs(data):
         path_lengths[i, :x["node_features"].shape[0], :x["node_features"].shape[0]] = torch.tensor(x["path_lengths"])
     
     return {"node_features": node_features, "mask": mask, "target": target,
-            "node_centralities": node_centralities, "paths": paths, "path_lengths": path_lengths}
+            "node_centralities": node_centralities, "path_lengths": path_lengths}

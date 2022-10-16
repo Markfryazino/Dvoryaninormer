@@ -71,7 +71,7 @@ class Shifter(nn.Module):
         self.path_idx_embedding = nn.Embedding(512, hidden_dim)
         self.num_heads = num_heads
 
-    def forward(self, X, mask, paths, path_lengths):
+    def forward(self, X, mask, path_lengths):
         if not Shifter.active:
             return None
 
@@ -104,8 +104,8 @@ class EncoderBlock(nn.Module):
 
         self.shifter = Shifter()
 
-    def forward(self, X, mask, paths, path_lengths):
-        shift = self.shifter(X, mask, paths, path_lengths)
+    def forward(self, X, mask, path_lengths):
+        shift = self.shifter(X, mask, path_lengths)
 
         X_normed = self.layer_norm_1(X)
         X_attn = self.attention(q=X_normed, k=X_normed, v=X_normed, mask=mask, shift=shift) + X
@@ -143,7 +143,7 @@ class Dvoryaninormer(nn.Module):
         return torch.cat([vnode_embedding.unsqueeze(1), node_features], dim=1), \
                torch.cat([torch.ones(batch_size, 1).to(mask.device), mask], dim=1)
 
-    def forward(self, node_features, mask, node_centralities=None, paths=None, path_lengths=None):
+    def forward(self, node_features, mask, node_centralities=None, path_lengths=None):
         node_features = self.node_embedder(node_features)
 
         if node_centralities is not None and self.add_centrality_embedding:
@@ -152,6 +152,6 @@ class Dvoryaninormer(nn.Module):
         node_features, mask = self._add_vnode(node_features, mask)
 
         for encoder in self.encoders:
-            node_features = encoder(node_features, mask, paths, path_lengths)
+            node_features = encoder(node_features, mask, path_lengths)
 
         return self.projection(node_features[:, 0, :])
