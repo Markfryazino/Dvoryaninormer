@@ -46,18 +46,8 @@ class CoilDataset(torch.utils.data.Dataset):
         node_features = torch.vstack([torch.tensor(graph.nodes[i]["hist"]) for i in graph.nodes])
         node_centralities = [graph.degree[i] for i in graph.nodes]
 
-        shortest_paths_dict = dict(nx.all_pairs_shortest_path(graph))
-        paths = [[shortest_paths_dict[v][u] for u in graph.nodes] for v in graph.nodes]
         shortest_paths_lengths_dict = dict(nx.all_pairs_shortest_path_length(graph))
         path_lengths = [[shortest_paths_lengths_dict[v][u] for u in graph.nodes] for v in graph.nodes]
-
-        for u in range(len(graph.nodes)):
-            for v in range(len(graph.nodes)):
-                p = paths[u][v]
-                features = torch.zeros(len(p) - 1, 1)
-                for i in range(len(p) - 1):
-                    features[i] = graph.get_edge_data(p[i], p[i+1])["length"]
-                paths[u][v] = features
 
         return {"node_features": node_features, "target": self.targets[idx], 
                 "node_centralities": node_centralities, "path_lengths": path_lengths}
@@ -75,7 +65,6 @@ def collate_graphs(data):
         node_centralities[i, :x["node_features"].shape[0]] = torch.tensor(x["node_centralities"])
 
     target = torch.tensor([x["target"] for x in data])
-    paths = [x["paths"] for x in data]
 
     path_lengths = torch.zeros((len(data), max_nodes, max_nodes))
 
