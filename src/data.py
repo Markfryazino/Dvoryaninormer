@@ -53,7 +53,6 @@ class CoilDataset(torch.utils.data.Dataset):
             for k, v in val.items():
                 shortest_paths_lengths_dict[key][k] = v
 
-        print(shortest_paths_lengths_dict)
         path_lengths = [[shortest_paths_lengths_dict[v][u] for u in graph.nodes] for v in graph.nodes]
 
         return {"node_features": node_features, "target": self.targets[idx], 
