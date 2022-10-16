@@ -102,7 +102,7 @@ class EncoderBlock(nn.Module):
         self.layer_norm_1 = nn.LayerNorm(embed_dim)
         self.layer_norm_2 = nn.LayerNorm(embed_dim)
 
-        self.shifter = Shifter()
+        self.shifter = Shifter(hidden_dim=embed_dim, num_heads=attn_num_heads)
 
     def forward(self, X, mask, path_lengths):
         shift = self.shifter(X, mask, path_lengths)
@@ -147,7 +147,7 @@ class Dvoryaninormer(nn.Module):
         node_features = self.node_embedder(node_features)
 
         if node_centralities is not None and self.add_centrality_embedding:
-            node_features += self.centrality_embedding(node_centralities)
+            node_features += self.centrality_embedding(node_centralities.long())
 
         node_features, mask = self._add_vnode(node_features, mask)
 
