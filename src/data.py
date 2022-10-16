@@ -2,6 +2,8 @@ import numpy as np
 import torch
 import networkx as nx
 
+from collections import defaultdict
+
 
 def load_coil_graphs(root="data/"):
     with open(f"{root}COIL-RAG/COIL-RAG_graph_labels.txt") as f:
@@ -46,7 +48,12 @@ class CoilDataset(torch.utils.data.Dataset):
         node_features = torch.vstack([torch.tensor(graph.nodes[i]["hist"]) for i in graph.nodes])
         node_centralities = [graph.degree[i] for i in graph.nodes]
 
-        shortest_paths_lengths_dict = dict(nx.all_pairs_shortest_path_length(graph))
+        shortest_paths_lengths_dict = defaultdict(lambda: defaultdict(lambda: 511))
+        for key, val in dict(nx.all_pairs_shortest_path_length(graph)).items():
+            for k, v in val.items():
+                shortest_paths_lengths_dict[key][k] = v
+
+        print(shortest_paths_lengths_dict)
         path_lengths = [[shortest_paths_lengths_dict[v][u] for u in graph.nodes] for v in graph.nodes]
 
         return {"node_features": node_features, "target": self.targets[idx], 
